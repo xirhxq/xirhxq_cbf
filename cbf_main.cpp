@@ -5,7 +5,7 @@
 #include <fstream>
 #include <ctime>
 
-double f(Point _p, double t){
+double f(Point _p, double t) {
 //    return 1;
 //    if (t <= 20)    return 1;
 //    else if (t <= 40) return exp(-(_p-Point(5, 5)).len2());
@@ -18,17 +18,20 @@ double f(Point _p, double t){
 }
 
 int main() {
+    clock_t start = clock();
+
     time_t tt = time(NULL);
-    tm* t = localtime(&tt);
+    tm *t = localtime(&tt);
     char data_out_path[256];
-    sprintf(data_out_path,R"(../data/%02d-%02d_%02d-%02d_data.json)",
+    sprintf(data_out_path, R"(../data/%02d-%02d_%02d-%02d_data.json)",
             t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min);
 
 
-    Polygon wd_p({Point(0, 0),
-                  Point(20, 0),
-                  Point(0, 10),
-                  Point(20, 10)});
+    Polygon wd_p({  Point(0, 0),
+                    Point(20, 0),
+                    Point(0, 10),
+                    Point(20, 10)
+    });
 
     std::vector<Point> c = {Point(19.0, 2.0),
                             Point(19.0, 4.0),
@@ -46,9 +49,6 @@ int main() {
     s.para_log_once();
 
     s.output();
-    Isometry3d  i;
-    i.translation();
-    i.rotation();
 
     double t_total = 40, t_gap = 0.02;
     for (int iter = 1; iter <= t_total / t_gap; iter++) {
@@ -64,5 +64,9 @@ int main() {
     s.output();
     s.end_log();
     printf("Data saved in %s\n", data_out_path);
+
+    clock_t finish = clock();
+    double duration = (double)(finish - start) / CLOCKS_PER_SEC;
+    printf("%.4lf seconds passed!\n", duration);
     return 0;
 }
