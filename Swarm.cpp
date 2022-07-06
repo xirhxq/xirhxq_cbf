@@ -24,13 +24,12 @@ Swarm::Swarm(int _n, World& _wd) {
     for (int i = 1; i <= _n; i++){
         r[i] = Robot(4);
         r[i].G(2, 2) = 0;
-        r[i].G(3, 3) = 0;
-//        r[i].batt_ord = 3;
+        r[i].G(3, 3) = 1;
         r[i].set_battery(20.0 * (rand() % 100) / 100 + 10);
-        r[i].X(3) = 0;
+        r[i].X(3) = pi;
 //        r[i].set_battery(i * 10 + 10);
 //        r[i].F << 0, 0, -1;
-        r[i].F << 0, 0, -1, 10000;
+        r[i].F << 0, 0, -1, 0;
     }
     random_initial_position();
 }
@@ -54,12 +53,33 @@ void Swarm::set_h() {
     std::function<double(Point, World)> nearest_dis = [=](Point _p, World _w){
         return _w.dist_to_charge_place(_p) / _w.charge_dist;
     };
+    std::function<double(Point)> angle_to_center = [=](Point _p) {
+        double ang =  _p.angle_to(Point(10, 5));
+//        std::cout << "ang = " << 180 / pi * ang << std::endl;
+        return ang;
+    };
     for (int i = 1; i <= n; i++){
         std::function<double(VectorXd)> dis_h = [=](VectorXd _x){
             return _x(r[i].batt_ord) -
             log(nearest_dis(Point(_x(r[i].x_ord), _x(r[i].y_ord)), wd));
         };
-        r[i].energy_cbf.h = dis_h;
+        CBF energy_cbf;
+        energy_cbf.h = dis_h;
+        energy_cbf.alpha = [](double _h) {return _h;};
+        r[i].cbf_no_slack.push_back(energy_cbf);
+
+        std::function<double(VectorXd)> camera_angle = [=](VectorXd _x){
+            double delta_angle = _x(r[i].camera_ord)
+                                 - angle_to_center(Point(_x(r[i].x_ord), _x(r[i].y_ord)));
+            if (delta_angle <= -pi) delta_angle += 2 * pi;
+            else if (delta_angle >= pi) delta_angle -= 2 * pi;
+//            std::cout << "delta_angle = " << delta_angle << std::endl;
+            return -5 * abs(delta_angle);
+        };
+        CBF camera_cbf;
+        camera_cbf.h = camera_angle;
+        camera_cbf.alpha = [](double _h) {return _h;};
+        r[i].cbf_slack.push_back(camera_cbf);
     }
 }
 
@@ -97,7 +117,8 @@ void Swarm::log_once() {
             {"y", r[i].y()},
             {"batt", r[i].batt()},
             {"camera", r[i].camera()},
-            {"energy_cbf", r[i].energy_cbf.h(r[i].X)}
+            {"energy_cbf", r[i].cbf_no_slack[0].h(r[i].X)},
+            {"camera_cbf", r[i].cbf_slack[0].h(r[i].X)}
         };
     }
     data_j["state"].push_back(tmp_j);
@@ -135,6 +156,7 @@ void Swarm::cvt_forward(double _t, const std::function<double(Point, double)>& f
         u.setZero();
         u(r[i].x_ord) = up.x;
         u(r[i].y_ord) = up.y;
+//        std::cout << "Robot " << i << std::endl;
 //        std::cout << u << std::endl;
         r[i].time_forward(u, _t, wd);
     }
