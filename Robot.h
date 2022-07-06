@@ -13,7 +13,7 @@
 class Robot{
 public:
     int x_ord = 0, y_ord = 1, batt_ord = 2, camera_ord = 3;
-    CBF energy_cbf;
+    std::vector<CBF> cbf_no_slack, cbf_slack;
     MatrixXd G;
     VectorXd F, X;
 

@@ -6,6 +6,7 @@ from matplotlib.patches import Wedge
 import matplotlib
 import os
 import re
+import math
 
 
 ptn = re.compile('.*.json')
@@ -79,9 +80,9 @@ def update(num):
     for i in range(robot_num):
         c = data_dict["state"][num]["robot"][i]
         wed[i].set_center([c["x"], c["y"]])
-        wed[i].set_theta1(c["camera"] - 15)
-        wed[i].set_theta2(c["camera"] + 15)
-        anno_list[i].set_text('E = %.1f' % (batt_list[i]))
+        wed[i].set_theta1(math.degrees(c["camera"]) - 15)
+        wed[i].set_theta2(math.degrees(c["camera"]) + 15)
+        anno_list[i].set_text('E = %.2f C = %.3f' % (batt_list[i], math.degrees(c["camera"])))
         if "cvt" in data_dict["state"][num]:
             anno_list[i].set_position((pos_x_list[i], pos_y_list[i]))
             poly_line_list[i].set_data(poly_x_list[i], poly_y_list[i])

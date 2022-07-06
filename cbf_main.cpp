@@ -43,7 +43,7 @@ int main() {
                             Point(1.0, 8.0)};
     World wd(wd_p, c);
 
-    Swarm s = Swarm(12, wd);
+    Swarm s = Swarm(6, wd);
     s.set_h();
     s.init_log_path(data_out_path);
     s.para_log_once();
