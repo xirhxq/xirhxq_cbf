@@ -27,6 +27,7 @@ public:
 
     void random_initial_position();
     void set_h();
+    void set_h_with_time();
 
     void init_log_path(char _p[]);
     void end_log();
@@ -35,11 +36,12 @@ public:
 
     void time_forward(double _t);
 
-    void cvt_forward(double _t, const std::function<double(Point, double)>& f);
+    void cvt_forward(double _t);
+//    void cvt_forward(double _t, const std::function<double(Point, double)>& f);
     void get_pos(Point _p[]);
 
-    void get_x_limit(double _x[]);
-    void get_y_limit(double _y[]);
+    void get_x_limit(double _x[], double inflation = 1.2);
+    void get_y_limit(double _y[], double inflation = 1.2);
 };
 
 

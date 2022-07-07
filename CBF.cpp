@@ -21,7 +21,6 @@ double CBF::dh(VectorXd _x, int _i){
 }
 
 
-
 VectorXd CBF::dhdx(VectorXd _x) {
     VectorXd res = _x;
     for (int i = 0; i < _x.size(); i++){

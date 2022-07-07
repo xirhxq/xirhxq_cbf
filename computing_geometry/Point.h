@@ -41,8 +41,8 @@ public:
     double angle_to(const Point &b) const;
     double distance_to(const Point &b) const;
     Point normalize() const;
-    Point transform(double &b) const;
-    Point saturation(double &b);
+    Point transform(const double &b) const;
+    Point saturation(const double &b);
     Point rotate(double &b) const;
     Point rotate_around(const Point &b, double a) const;
 

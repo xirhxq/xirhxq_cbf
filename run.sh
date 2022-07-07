@@ -1,4 +1,4 @@
 cd cmake-build-debug || exit
-./V9.0
+./cbf_main
 cd ..
 python3 draw.py

@@ -14,6 +14,8 @@ public:
     Polygon w;
     std::vector<Point> charge_place;
     double charge_dist = 0.3;
+    std::function<Point (double)> target_pos;
+    std::function<double (Point, double)> dens;
 
 public:
     World();

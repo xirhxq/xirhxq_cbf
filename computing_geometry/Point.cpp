@@ -103,11 +103,11 @@ Point Point::normalize() const{
     return *this / this->len();
 }
 
-Point Point::transform(double &b) const{
+Point Point::transform(const double &b) const{
     return *this / this->len() * b;
 }
 
-Point Point::saturation(double &b){
+Point Point::saturation(const double &b){
     if (this->len() > b){
         return this->transform(b);
     }

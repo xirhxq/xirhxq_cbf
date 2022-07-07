@@ -274,25 +274,25 @@ double Polygon::area_with_function(const std::function<double(Point)>& f, double
     return res;
 }
 
-void Polygon::get_x_limit(double *x) {
+void Polygon::get_x_limit(double *x, double inflation) {
     x[0] = x[1] = p[1].x;
     for (int i = 2; i <= n; i++){
         x[0] = std::fmin(x[0], p[i].x);
         x[1] = std::fmax(x[1], p[i].x);
     }
     double mid = (x[0] + x[1]) / 2.0;
-    x[0] = mid + (x[0] - mid) * 1.2;
-    x[1] = mid + (x[1] - mid) * 1.2;
+    x[0] = mid + (x[0] - mid) * inflation;
+    x[1] = mid + (x[1] - mid) * inflation;
 }
 
-void Polygon::get_y_limit(double *y) {
+void Polygon::get_y_limit(double *y, double inflation) {
     y[0] = y[1] = p[1].y;
     for (int i = 2; i <= n; i++){
         y[0] = std::fmin(y[0], p[i].y);
         y[1] = std::fmax(y[1], p[i].y);
     }
     double mid = (y[0] + y[1]) / 2.0;
-    y[0] = mid + (y[0] - mid) * 1.2;
-    y[1] = mid + (y[1] - mid) * 1.2;
+    y[0] = mid + (y[0] - mid) * inflation;
+    y[1] = mid + (y[1] - mid) * inflation;
 }
 

@@ -47,8 +47,8 @@ public:
     double area();
     double area_with_function(const std::function<double(Point)>& f, double spacing);
 
-    void get_x_limit(double x[]);
-    void get_y_limit(double y[]);
+    void get_x_limit(double *x, double inflation = 1.2);
+    void get_y_limit(double *y, double inflation = 1.2);
 
 };
 
